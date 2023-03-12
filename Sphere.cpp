@@ -2,14 +2,25 @@
 #include "Vector3d.h"
 #include "Object3d.h"
 
-Sphere::Sphere(Vector3d position, float size): Object3d(position, size), m_center(position)
+#include <cmath>
+
+Sphere::Sphere(Vector3d position, float size): Object3d(position, size)
 {
+    position_ = position;
+    size_ = size;
 }
 
 Vector3d Sphere::getCenter()
 {
-    return m_center;
+    //return Vector3d(0.1f, 0.0f, 00.0f);
+    float radius = 0.1;
+    return Vector3d(position_.getX() + radius, position_.getY() + radius, position_.getZ() + radius);
 }
+
+double Sphere::getVolume() const {
+    return (4.0 / 3.0) * 3.14; // *pow(radius, 3);
+}
+
 /*
 float Sphere::distance(const Vector3d& point) const {
     // Calculer la distance entre le centre de la sphère et le point donné
@@ -17,17 +28,6 @@ float Sphere::distance(const Vector3d& point) const {
 }
 */
 
-/*
-double Sphere::getSurfaceArea(int radius) {
-    return 4.0 * 3.14 * radius * radius;
-}
-
-// Méthode Get Center pour donner le centre
-double Sphere::GetCenter() {
-    return center;
-}
-
-*/
 
 
 

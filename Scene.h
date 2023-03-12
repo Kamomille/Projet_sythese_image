@@ -15,7 +15,7 @@ public:
     //Color traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection);
     Color traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere);
 private:
-    std::vector<Object3d*> m_objects;
+    std::vector<Object3d*> objects_;
 };
 
 

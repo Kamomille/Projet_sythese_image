@@ -6,38 +6,14 @@ class Sphere : public Object3d {
 public:
     Sphere(Vector3d position, float size);
     Vector3d getCenter(); 
-    //virtual ~Sphere();
-    //virtual float distance(const Vector3d& point) const;
+
+    virtual double getVolume() const override;
 
 private:
-    Vector3d m_center;
+    Vector3d position_;
+    float size_;
 };
 
-
-
-/*
-class Sphere {
-private:
-    Vector3d origin;
-    float radius;
-
-
-public:
-    void SetColor(Color);
-};
-
-
-
-class Sphere : public Object3d {
-public:
-    float center;
-    explicit Sphere(const Vector3d& origin, float center) : Object3d(origin) {
-        this->center = center;
-    }
-    double GetCenter();
-};
-
-*/
 
 
 

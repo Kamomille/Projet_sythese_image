@@ -6,34 +6,20 @@
 class Object3d {
 public:
     Object3d(Vector3d position, float size);
+
     void SetColor(Color color);
-    ///virtual*/ ~Object3d();
-    //virtual float distance(const Vector3d& point) const;
-    float distance();
     Color getColor();
+
+    float distance();
     Vector3d getCenter();
     float getRadius();
+
+    virtual double getVolume() const = 0;
+
 private:
-    Vector3d m_position;
-    float m_size;
-    Color m_color;
-    float size;
+    Vector3d position_;
+    float size_;
+    Color color_;
 };
 
-
-
-/*
-
-class Object3d {
-private:
-	Vector3d origin;
-	Color color;
-
-protected:
-	explicit Object3d(const Vector3d&);
-
-public:
-	void SetColor(Color);
-};
-*/
 

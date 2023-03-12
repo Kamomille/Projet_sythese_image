@@ -7,18 +7,16 @@
 #include "Vector3d.h"
 
 
-#include <iostream>
-
 void Scene::addObject(Object3d* object) {
-    m_objects.push_back(object);
+    objects_.push_back(object);
 }
 
 Color Scene::traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere) {
 
-    Vector3d oc = rayOrigin - Vector3d(0.1f, 0.0f, 00.0f); // sphere.getCenter();
+    Vector3d oc = rayOrigin - sphere->getCenter(); 
     float a = rayDirection.Dot(rayDirection);
     float b = 2.0f * oc.Dot(rayDirection);
-    float c = oc.Dot(oc) - 0.1 * 0.1; // sphere.getRadius()* sphere.getRadius();
+    float c = oc.Dot(oc) - sphere->getRadius() * sphere->getRadius();
     float discriminant = b * b - 4 * a * c;
 
     if (discriminant < 0) { // rayon ne touche pas la sphère
@@ -33,7 +31,7 @@ Color Scene::traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection, O
         return Color(0, 0, 0);
     }
 
-    Color surfaceColor = Color(100, 100, 0);//sphere.getColor();
+    Color surfaceColor = sphere->getColor();
 
     return surfaceColor; 
 }
@@ -42,6 +40,7 @@ Color Scene::traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection, O
 
 
 void Scene::render(const std::string& filename, int width, int height, Object3d* sphere) {
+
 
     unsigned char* colors = new unsigned char[width * height * 3]; 
     float aspectRatio = static_cast<float>(width) / static_cast<float>(height); // rapport hauteur / largeur
@@ -56,7 +55,6 @@ void Scene::render(const std::string& filename, int width, int height, Object3d*
             rayDirection.Normalize(); 
 
             Color color = traceRay(rayOrigin, rayDirection, sphere);
-            //Color color(255, 0, 0);
 
             colors[(j * width + i) * 3 + 0] = color.r;
             colors[(j * width + i) * 3 + 1] = color.g;
