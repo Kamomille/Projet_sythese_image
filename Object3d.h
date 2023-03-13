@@ -14,6 +14,9 @@ public:
     Vector3d getCenter();
     float getRadius();
 
+    Vector3d getNormal(Vector3d point, Vector3d center);
+    Vector3d getPosition();
+
     virtual double getVolume() const = 0;
 
 private:

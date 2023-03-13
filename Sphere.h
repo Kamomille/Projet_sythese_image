@@ -7,6 +7,8 @@ public:
     Sphere(Vector3d position, float size);
     Vector3d getCenter(); 
 
+    //virtual Vector3d getNormal(Vector3d point) override;
+
     virtual double getVolume() const override;
 
 private:

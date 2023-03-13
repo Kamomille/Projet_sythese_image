@@ -9,6 +9,17 @@ Object3d::Object3d(Vector3d position, float size)
     size_ = size;
 }
 
+Vector3d Object3d::getNormal(Vector3d point, Vector3d center) {
+    Vector3d normal = point - center;
+    normal.Normalize();
+    return normal;
+}
+
+
+Vector3d Object3d::getPosition() {
+    return position_;
+}
+
 void Object3d::SetColor(Color color)
 {
     color_ = color;

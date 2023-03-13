@@ -112,3 +112,11 @@ Vector3d operator * (double k, const Vector3d& v)
 {
 	return v * k;
 }
+
+
+
+// Ajouté en +
+
+float dotProduct(Vector3d v1, Vector3d v2) {
+	return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
+}

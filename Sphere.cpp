@@ -10,6 +10,8 @@ Sphere::Sphere(Vector3d position, float size): Object3d(position, size)
     size_ = size;
 }
 
+
+
 Vector3d Sphere::getCenter()
 {
     //return Vector3d(0.1f, 0.0f, 00.0f);

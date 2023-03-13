@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object3d.h"
+#include "Light.h"
 #include <string>
 
 #include <vector>
@@ -11,11 +12,15 @@ using namespace std;
 class Scene {
 public:
     void addObject(Object3d* object);
-    void render(const std::string& filename, int width, int height, Object3d* sphere);
+    void addLight(Light* light);
+    void render(const std::string& filename, int width, int height, Object3d* sphere, Light* light);
     //Color traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection);
     Color traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere);
+    float traceRay_2(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere);
+    Color addSomeLight(Light* light, Object3d* sphere, int x, int y, float t);
 private:
     std::vector<Object3d*> objects_;
+    std::vector<Light*> light_;
 };
 
 

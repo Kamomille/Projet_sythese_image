@@ -41,6 +41,10 @@ public:
 	void Normalize();
 	Vector3d Unit() const;
 
+	// Ajout
+
+	float dotProduct(Vector3d v1, Vector3d v2);
+
 protected:
 
 	double x, y, z;
