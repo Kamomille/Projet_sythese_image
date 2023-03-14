@@ -1,5 +1,30 @@
 #pragma once
 
+#include "Ray.h"
+#include "Color.h"
+
+class Object3d
+{
+public:
+
+    Object3d();
+    virtual ~Object3d();
+
+    virtual double getNearestIntersectionsDistance(const Ray& rRay) = 0;
+    virtual double getNearestIntersectionsDistance_2(const Ray& rRay) = 0;
+
+    virtual float intersect_sphere(const Ray& ray) = 0;
+
+    void setColor(const Color& _color);
+    const Color& getColor();
+
+protected:
+
+    Color color;
+};
+
+
+/*
 #include "Vector3d.h"
 #include "Color.h"
 
@@ -26,3 +51,4 @@ private:
 };
 
 
+*/

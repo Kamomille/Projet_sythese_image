@@ -1,10 +1,9 @@
-#ifndef __BMPFILE_H
-#define __BMPFILE_H
+#pragma once
 
 #include <string>
 #include <cstring> // for memcpy
 
-class BMPHelper
+class BMPFile
 {
 public:
 
@@ -20,10 +19,8 @@ public:
 	*/
 
 	// Save image buffer (each color in BGR format) to a BMP file
-	static void SaveBmp(std::string fileName, unsigned char* imageBuffer, unsigned int width, unsigned int height);
+	static void saveBmp(std::string fileName, unsigned char* imageBuffer, unsigned int width, unsigned int height);
 
 	// Load a BMP file to a buffer and get its width and height, don't forget to delete buffer after use (see example above)
-	static unsigned char* LoadBmp(std::string fileName, unsigned int& width, unsigned int& height, bool flipY = true);
+	static unsigned char* loadBmp(std::string fileName, unsigned int& width, unsigned int& height, bool flipY = true);
 };
-
-#endif

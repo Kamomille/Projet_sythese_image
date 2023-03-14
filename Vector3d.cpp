@@ -79,19 +79,19 @@ Vector3d& Vector3d::operator /= (double value)
 
 // operations
 
-double Vector3d::Dot(const Vector3d& v) const
+double Vector3d::dot(const Vector3d& v) const
 {
 	return ((x * v.x) + (y * v.y) + (z * v.z));
 }
 
-double Vector3d::GetLength()
+double Vector3d::getLength()
 {
 	return ((double)sqrt(x * x + y * y + z * z));
 }
 
-void Vector3d::Normalize()
+void Vector3d::normalize()
 {
-	double length = GetLength();
+	double length = getLength();
 
 	if (length > 0)
 	{
@@ -101,22 +101,14 @@ void Vector3d::Normalize()
 	}
 }
 
-Vector3d Vector3d::Unit() const
+Vector3d Vector3d::unit() const
 {
 	Vector3d v(*this);
-	v.Normalize();
+	v.normalize();
 	return v;
 }
 
 Vector3d operator * (double k, const Vector3d& v)
 {
 	return v * k;
-}
-
-
-
-// Ajouté en +
-
-float dotProduct(Vector3d v1, Vector3d v2) {
-	return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
 }

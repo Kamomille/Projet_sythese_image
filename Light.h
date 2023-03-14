@@ -1,18 +1,13 @@
 #pragma once
 
-#include "Object3d.h"
 #include "Vector3d.h"
 
-class Light {
+class Light
+{
 public:
-    Light(Vector3d direction);
+    Light();
+    virtual ~Light();
 
-    void applyToSphere(Object3d* sphere);
-
-private:
-    Vector3d direction_;
+	virtual Vector3d getVectorToLightAtPoint(const Vector3d& point) = 0;
 };
-
-
-
 

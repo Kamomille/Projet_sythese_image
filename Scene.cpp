@@ -1,158 +1,129 @@
-#include "Scene.h"
-#include "Object3d.h"
-#include "Sphere.h"
-#include "Light.h"
-#include "Color.h"
-#include "BMPHelper.h"
-#include "Vector3d.h"
-
-
+#include <cstdlib>
 #include <iostream>
 
+#include "Scene.h"
+#include "Bmpfile.h"
 
-void Scene::addObject(Object3d* object) {
-    objects_.push_back(object);
+#define MIN(a,b)	( a < b ? a : b )
+
+
+using namespace std;
+
+Scene::Scene()
+	: objects3d(),
+	lights()
+{
 }
 
-void Scene::addLight(Light* light) {
-    light_.push_back(light);
+Scene::~Scene()
+{
+	for (Object3d* object3d : objects3d) {
+		delete object3d;
+	}
+	for (Light* light : lights) {
+		delete light;
+	}
 }
 
-Color Scene::traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere) {
-
-    Vector3d oc = rayOrigin - sphere->getCenter(); 
-    float a = rayDirection.Dot(rayDirection);
-    float b = 2.0f * oc.Dot(rayDirection);
-    float c = oc.Dot(oc) - sphere->getRadius() * sphere->getRadius();
-    float discriminant = b * b - 4 * a * c;
-
-    if (discriminant < 0) { // rayon ne touche pas la sphère
-        return INFINITY; 
-    }
-
-    float t1 = (-b - std::sqrt(discriminant)) / (2 * a);
-    float t2 = (-b + std::sqrt(discriminant)) / (2 * a);
-
-    float t = std::min(t1, t2);
-    if (t < 0) {
-        return INFINITY; // Color(0, 0, 0);
-    }
-
-    Color surfaceColor = sphere->getColor();
-
-    return surfaceColor; 
+void Scene::addObject(Object3d* object3d)
+{
+	objects3d.push_back(object3d);
 }
 
-float Scene::traceRay_2(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere) {
+void Scene::addLight(Light* light)
+{
+	lights.push_back(light);
+}
 
-    Vector3d oc = rayOrigin - sphere->getCenter();
-    float a = rayDirection.Dot(rayDirection);
-    float b = 2.0f * oc.Dot(rayDirection);
-    float c = oc.Dot(oc) - sphere->getRadius() * sphere->getRadius();
-    float discriminant = b * b - 4 * a * c;
+void Scene::render(std::string fileName, unsigned int width, unsigned int height)
+{
+	Ray ray;
+	unsigned char* pColors = new unsigned char[width * height * 3];
+	ray.setOrigin(Vector3d(0, 0, 10));
+	unsigned int index = 0;
 
-    if (discriminant < 0) { // rayon ne touche pas la sphère
-        return 0;
-    }
+	for (unsigned int y = 0; y < height; y++)
+	{
+		for (unsigned int x = 0; x < width; x++)
+		{
+			Vector3d target = Vector3d(((double)x - (double)width / 2) / (double)width, -((double)y - (double)height / 2) / (double)height, 0);
+			ray.setDirection((target - ray.getOrigin()).unit());
 
-    float t1 = (-b - std::sqrt(discriminant)) / (2 * a);
-    float t2 = (-b + std::sqrt(discriminant)) / (2 * a);
+			Color color = raytrace(ray);
 
-    float t = std::min(t1, t2);
-    if (t < 0) {
-        return 0; // Color(0, 0, 0);
-    }
+			float add = raytrace_2(ray)*1000;
+			color.r -= add;
 
-    //int intensite
-    t = (t - 7) * 100;
+			//color.g += add;
+			//color.b += add;
 
-    //std::cout << t;
-    //std::cout << "\n";
+			/*
+			if (raytrace_2(ray) != 0) {
+				cout << "\n" << raytrace_2(ray)* 1000 << endl;
+			}
+			double t = raytrace_2(ray);
+			if (t > 9) {
+				t = abs(t - 9);
+				color = Color(1, t, t);
+			}*/
 
-    return t;
+			 
+
+			pColors[index++] = MIN(int(255 * color.b), 255);
+			pColors[index++] = MIN(int(255 * color.g), 255);
+			pColors[index++] = MIN(int(255 * color.r), 255);
+		}
+	}
+	BMPFile::saveBmp(fileName, pColors, width, height);
+	delete[]pColors;
+}
+
+Color Scene::raytrace(const Ray& ray)
+{
+	Object3d* nearestObject = NULL;
+	double nearestDistance = 10000.0;
+	for (Object3d* obj : objects3d) {
+		double distance = obj->getNearestIntersectionsDistance(ray);
+		if (distance < nearestDistance) {
+			nearestDistance = distance;
+			nearestObject = obj;
+		}
+	}
+	if (!nearestObject) {
+		return Color();
+	}
+	return nearestObject->getColor();
+}
+
+double Scene::raytrace_2(const Ray& ray)
+{
+	Object3d* nearestObject = NULL;
+	double nearestDistance = 10000.0;
+	for (Object3d* obj : objects3d) {
+		double distance = obj->getNearestIntersectionsDistance_2(ray);
+		if (distance < nearestDistance) {
+			nearestDistance = distance;
+			nearestObject = obj;
+		}
+	}
+	if (!nearestObject) {
+		return 0;
+	}
+	//t = 1.2 - abs(t - 9);
+	return nearestDistance; // nearestObject->getColor();
 }
 
 
-Color Scene::addSomeLight(Light* light, Object3d* sphere, int x, int y, float t) {
+//t = 1.2 - abs(t - 9);
+//Color color = Color(t, 0, 0);
+//cout << "\n" << t << endl;
 
-    Vector3d lightDir = Vector3d(-1, -1, 0);
-    Vector3d rayOrigin(0.0f, 0.0f, 10.0f);
-    int width = 1000;
-    int height = 1000;
+/*
+// Calculate the dot product between the normal and light direction
+float dotProduct = max(0.0f, dot(normal, lightDirection));
 
+// Calculate the diffuse color
+glm::vec3 diffuseColor = lightColor * surfaceColor * dotProduct;
 
-    // Calcul de la direction du rayon
-    Vector3d rayDir(x - width / 2, height / 2 - y, -width / 2);
-    rayDir.Normalize();
-
-    // Calcul de l'intersection entre le rayon et la sphère
-    //float t = 1.0;
-
-    // Calcul de la normale à la surface de la sphère au point d'intersection
-    Vector3d hitPoint = rayOrigin + t * rayDir;
-    Vector3d normal = hitPoint - sphere->getCenter();
-    normal.Normalize();
-
-
-    // Calcul de la couleur de l'objet en fonction de la lumière
-    /*
-    Color color = sphere->getColor();
-    float intensity = normal.Dot(lightDir);
-    intensity = max(0.0f, intensity);*/
-
-    Color color = Color(0, 0, t);
-    return color;
-
-}
-
-
-
-void Scene::render(const std::string& filename, int width, int height, Object3d* sphere, Light* light) {
-
-
-    Vector3d lightDirection(-1.0f, -1.0f, -1.0f);
-    lightDirection.Normalize();
-
-
-    unsigned char* colors = new unsigned char[width * height * 3]; 
-    float aspectRatio = static_cast<float>(width) / static_cast<float>(height); // rapport hauteur / largeur
-
-    for (int j = 0; j < height; ++j) {
-        for (int i = 0; i < width; ++i) {
-            float x = (2.0f * static_cast<float>(i) / static_cast<float>(width) - 1.0f) * aspectRatio; // coordonnée x dans la plage [-aspectRatio, aspectRatio]
-            float y = 1.0f - 2.0f * static_cast<float>(j) / static_cast<float>(height); // coordonnée y dans la plage [-1, 1]
-
-            Vector3d rayOrigin(0.0f, 0.0f, 10.0f); 
-            Vector3d rayDirection(x, y, -1.0f); 
-            rayDirection.Normalize(); 
-
-            Color color = traceRay(rayOrigin, rayDirection, sphere);
-
-
-            int t = traceRay_2(rayOrigin, rayDirection, sphere);
-            if (t != 0){
-                color = addSomeLight(light, sphere, x, y, t);
-            }
-
-
-            /*
-            Vector3d point = rayOrigin + 10 * rayDirection; // t=10
-            Vector3d normal = sphere->getNormal(point, sphere->getCenter());
-            //color = color * normal.dotProduct(normal, lightDirection);
-            if (height/1.9 < i) {
-                color.r = 100;
-                //color = color * normal.dotProduct(normal, lightDirection);
-            }*/
-
-
-            colors[(j * width + i) * 3 + 0] = color.r; // abs(255 - color.r);
-            colors[(j * width + i) * 3 + 1] = color.g; // abs(255 - color.g);
-            colors[(j * width + i) * 3 + 2] = abs(255 - color.b);
-        }
-    }
-
-    BMPHelper::SaveBmp(filename, colors, width, height);
-
-    delete[] colors; 
-}
+*/
 

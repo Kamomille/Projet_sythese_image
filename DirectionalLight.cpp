@@ -1,9 +1,16 @@
 #include "DirectionalLight.h"
+#include "Ray.h"
+#include "Sphere.h"
 #include "Vector3d.h"
-#include "Light.h"
 
-
-DirectionalLight::DirectionalLight(Vector3d position) : Light(position)
+DirectionalLight::DirectionalLight(const Vector3d& _center)
+	: Light(),
+	center(_center)
 {
-    position_ = position;
 }
+
+Vector3d DirectionalLight::getVectorToLightAtPoint(const Vector3d& point)
+{
+	return point;
+}
+

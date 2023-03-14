@@ -1,8 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "BMPHelper.h"
+#include "Bmpfile.h"
 
-void BMPHelper::SaveBmp(std::string fileName, unsigned char* imageBuffer, unsigned int w, unsigned int h)
+void BMPFile::saveBmp(std::string fileName, unsigned char* imageBuffer, unsigned int w, unsigned int h)
 {
 	int filesize = 54 + 3 * w * h;  //w is your image width, h is image height, both int
 
@@ -35,7 +35,7 @@ void BMPHelper::SaveBmp(std::string fileName, unsigned char* imageBuffer, unsign
 	fclose(f);
 }
 
-unsigned char* BMPHelper::LoadBmp(std::string fileName, unsigned int& width, unsigned int& height, bool flipY) {
+unsigned char* BMPFile::loadBmp(std::string fileName, unsigned int& width, unsigned int& height, bool flipY) {
 	printf("Reading image %s\n", fileName.c_str());
 
 	// Data read from the header of the BMP file
@@ -101,5 +101,3 @@ unsigned char* BMPHelper::LoadBmp(std::string fileName, unsigned int& width, uns
 
 	return data;
 }
-
-

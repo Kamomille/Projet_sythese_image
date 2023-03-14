@@ -1,51 +1,32 @@
 #pragma once
 
-#include "Object3d.h"
-#include "Light.h"
+#include <vector>
 #include <string>
 
-#include <vector>
-
-using namespace std;
-
-
-class Scene {
-public:
-    void addObject(Object3d* object);
-    void addLight(Light* light);
-    void render(const std::string& filename, int width, int height, Object3d* sphere, Light* light);
-    //Color traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection);
-    Color traceRay(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere);
-    float traceRay_2(const Vector3d& rayOrigin, const Vector3d& rayDirection, Object3d* sphere);
-    Color addSomeLight(Light* light, Object3d* sphere, int x, int y, float t);
-private:
-    std::vector<Object3d*> objects_;
-    std::vector<Light*> light_;
-};
-
-
-/*
-
-#include <vector>
+#include "Vector3d.h"
+#include "Ray.h"
 #include "Object3d.h"
 #include "Light.h"
-#include "Light.h"
+#include "Color.h"
 
-#include<sstream>
-#include<fstream>
-
-using namespace std;
-
-
-class Scene {
-protected:
-    std::vector<Object3d*> object3d;
-    std::vector<Light*> lights;
-
+class Scene
+{
 public:
-    void addObject(Object3d* obj);
-    void addLight(Light* light);
-    void render(string path, unsigned int width, unsigned int height);
-    void rayIntersectsSphere(const Vector3d& rayOrigin, const Vector3d& rayDirection, const Object3d* sphere);
+
+	Scene();
+	~Scene();
+
+	void addObject(Object3d* object3d);
+	void addLight(Light* light);
+
+	void render(std::string fileName, unsigned int width, unsigned int height);
+
+protected:
+
+	Color raytrace(const Ray& ray);
+	double raytrace_2(const Ray& ray);
+	Color rayLightTrace(const Ray& ray);
+
+	std::vector<Object3d*> objects3d;
+	std::vector<Light*> lights;
 };
-*/

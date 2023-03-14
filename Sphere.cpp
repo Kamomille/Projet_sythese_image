@@ -1,34 +1,65 @@
 #include "Sphere.h"
-#include "Vector3d.h"
-#include "Object3d.h"
 
-#include <cmath>
-
-Sphere::Sphere(Vector3d position, float size): Object3d(position, size)
+Sphere::Sphere(const Vector3d& _center, double _radius)
+	: Object3d(),
+	center(_center),
+	radius(_radius)
 {
-    position_ = position;
-    size_ = size;
 }
 
-
-
-Vector3d Sphere::getCenter()
+double Sphere::getNearestIntersectionsDistance(const Ray& ray)
 {
-    //return Vector3d(0.1f, 0.0f, 00.0f);
-    float radius = 0.1;
-    return Vector3d(position_.getX() + radius, position_.getY() + radius, position_.getZ() + radius);
+	Vector3d co = ray.getOrigin() - center;
+	double b = (co.dot(ray.getDirection()));
+	double disc = b * b - (co.dot(co)) + radius * radius;
+	if (disc < 0) {
+		return 10000.0;
+	}
+	return -b - sqrt(disc);
 }
 
-double Sphere::getVolume() const {
-    return (4.0 / 3.0) * 3.14; // *pow(radius, 3);
+
+
+double Sphere::getNearestIntersectionsDistance_2(const Ray& ray)
+{
+    Vector3d light(-1, -1, 1);
+    float Light_intensity = 0.25;
+
+    float intensity = 0;
+
+    float distance = getNearestIntersectionsDistance(ray); // intersect_sphere(ray);
+   
+    if (distance >= 0) {
+        Vector3d hit_point = ray.getOrigin() + ray.getDirection() * distance;
+        Vector3d normal = hit_point - center;
+        normal.normalize();
+
+        Vector3d to_light = light - hit_point;
+
+        float distance_to_light = to_light.getLength();
+        to_light.normalize();
+
+        intensity += Light_intensity * to_light.dot(normal) / (distance_to_light * distance_to_light);
+
+        return intensity / (1 + distance * distance);
+    }
+    else {
+        return 0;
+    }
+
 }
+
 
 /*
-float Sphere::distance(const Vector3d& point) const {
-    // Calculer la distance entre le centre de la sphère et le point donné
-    return 10; // (point - m_center).Magnitude() - m_radius;
+Vector3d center = Vector3d(0.15, 0, 0);
+
+Vector3d co = ray.getOrigin() - center;
+double b = (co.dot(ray.getDirection()));
+double disc = b * b - (co.dot(co)) + radius * radius;
+if (disc < 0) {
+    return 10000.0;
 }
-*/
+return -b - sqrt(disc);*/
 
 
 
@@ -39,34 +70,29 @@ float Sphere::distance(const Vector3d& point) const {
 
 
 
+float Sphere::intersect_sphere(const Ray& ray) {
+    /*
+    Vector3d co = ray.getOrigin() - center;
 
-
-
-
-
-/*
-
-// Clément
-
-  double intersects(const Ray &ray) override {
-    Vector3d CO  = this->center - ray.origin;
-
-    Vector3d b   = 2 * (ray.direction.Dot(CO));
-    double c     = CO.Dot(CO) - this->radius * this->radius;
-    double delta = -4 * c;
-
-    if (delta < 0)
-      return std::numeric_limits<double>::infinity();
-
-    double x1 = ((-b - std::sqrt(delta)) / 2).Normalize();
-    double x2 = ((-b + std::sqrt(delta)) / 2).Normalize();
-
-    if (x1 < x2 && x1 > 0)
-      return x1;
-    else if (x2 < x1 && x2 > 0)
-      return x2;
-    else
-      return std::numeric_limits<double>::infinity();
-  }
-
-*/
+    float a = ray.getDirection().dot(ray.getDirection());
+    float b = 2 * co.dot(ray.getDirection());
+    float c = co.dot(co) - radius * radius;
+    float disc = b * b - 4 * a * c;
+    if (disc < 0) {
+        return -1;
+    }
+    else {
+        float t1 = (-b - sqrt(disc)) / (2 * a);
+        float t2 = (-b + sqrt(disc)) / (2 * a);
+        if (t1 < 0) {
+            return t2;
+        }
+        else if (t2 < 0) {
+            return t1;
+        }
+        else {
+            return fmin(t1, t2);
+        }
+    }*/
+    return 0.0;
+}

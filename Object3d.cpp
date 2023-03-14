@@ -1,43 +1,33 @@
 #include "Object3d.h"
-#include "Color.h"
-#include "Vector3d.h"
 
-
-Object3d::Object3d(Vector3d position, float size) 
+Object3d::Object3d()
 {
-    position_ = position;
-    size_ = size;
 }
 
+Object3d::~Object3d()
+{
+}
+
+void Object3d::setColor(const Color& _color)
+{
+    color = _color;
+}
+
+const Color& Object3d::getColor()
+{
+    return color;
+}
+
+
+/*
+float Object3d::getRadius() {
+    return size_; // / 2.0f;
+}
 Vector3d Object3d::getNormal(Vector3d point, Vector3d center) {
     Vector3d normal = point - center;
     normal.Normalize();
     return normal;
 }
-
-
-Vector3d Object3d::getPosition() {
-    return position_;
-}
-
-void Object3d::SetColor(Color color)
-{
-    color_ = color;
-}
-Color Object3d::getColor() {
-    return color_;
-}
-
-
-float Object3d::distance() {
-    return 10;
-}
-
-
-float Object3d::getRadius() {
-    return size_; // / 2.0f;
-}
-
 
 Vector3d Object3d::getCenter() {
     float radius = getRadius();
@@ -45,4 +35,4 @@ Vector3d Object3d::getCenter() {
     //return Vector3d(0.1f, 0.0f, 00.0f);
 }
 
-
+*/

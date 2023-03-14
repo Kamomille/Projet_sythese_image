@@ -2,17 +2,12 @@
 
 #include "Light.h"
 
-class DirectionalLight : public Light {
+class DirectionalLight : public Light
+{
 public:
-    DirectionalLight(Vector3d position);
-
-private:
-    Vector3d position_;
+    DirectionalLight(const Vector3d& _center = Point3d(0.0, 0.0, 0.0));
+    Vector3d getVectorToLightAtPoint(const Vector3d& point);
+protected:
+    Point3d center;
 };
-
-
-
-
-
-
 

@@ -36,14 +36,10 @@ public:
 
 	// operations
 
-	double Dot(const Vector3d& v) const;
-	double GetLength();
-	void Normalize();
-	Vector3d Unit() const;
-
-	// Ajout
-
-	float dotProduct(Vector3d v1, Vector3d v2);
+	double dot(const Vector3d& v) const;
+	double getLength();
+	void normalize();
+	Vector3d unit() const;
 
 protected:
 
