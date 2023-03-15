@@ -3,14 +3,19 @@
 #include "Sphere.h"
 #include "Vector3d.h"
 
-DirectionalLight::DirectionalLight(const Vector3d& _center)
+DirectionalLight::DirectionalLight(const Vector3d& _direction)
 	: Light(),
-	center(_center)
+	direction(_direction)
 {
 }
 
-Vector3d DirectionalLight::getVectorToLightAtPoint(const Vector3d& point)
+Vector3d& DirectionalLight::getDirection()
 {
+	return direction;
+}
+
+
+Vector3d DirectionalLight::getVectorToLightAtPoint(const Vector3d& point) {
+	//return (direction - point).normalize();
 	return point;
 }
-

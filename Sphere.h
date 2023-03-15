@@ -8,10 +8,10 @@ public:
 
     Sphere(const Vector3d& _center = Point3d(0.0, 0.0, 0.0), double _radius = 1.0);
     double getNearestIntersectionsDistance(const Ray& rRay);
-    double getNearestIntersectionsDistance_2(const Ray& rRay);
 
+    double intersect_sphere(const Ray& rRay, Vector3d light);
 
-    float intersect_sphere(const Ray& ray);
+    Vector3d GetNormalAtPoint(const Vector3d hit_point);
 
 protected:
 

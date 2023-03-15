@@ -51,23 +51,15 @@ void Scene::render(std::string fileName, unsigned int width, unsigned int height
 
 			Color color = raytrace(ray);
 
-			float add = raytrace_2(ray)*1000;
+			float add = raytrace_2(ray)*500;
 			color.r -= add;
-
-			//color.g += add;
-			//color.b += add;
+			color.g -= add;
+			color.b -= add;
 
 			/*
 			if (raytrace_2(ray) != 0) {
 				cout << "\n" << raytrace_2(ray)* 1000 << endl;
-			}
-			double t = raytrace_2(ray);
-			if (t > 9) {
-				t = abs(t - 9);
-				color = Color(1, t, t);
 			}*/
-
-			 
 
 			pColors[index++] = MIN(int(255 * color.b), 255);
 			pColors[index++] = MIN(int(255 * color.g), 255);
@@ -100,30 +92,41 @@ double Scene::raytrace_2(const Ray& ray)
 	Object3d* nearestObject = NULL;
 	double nearestDistance = 10000.0;
 	for (Object3d* obj : objects3d) {
-		double distance = obj->getNearestIntersectionsDistance_2(ray);
-		if (distance < nearestDistance) {
-			nearestDistance = distance;
-			nearestObject = obj;
+
+		for (Light* light : lights) {
+			Vector3d light_vector = light->getDirection();
+
+			double distance = obj->intersect_sphere(ray, light_vector);
+			if (distance < nearestDistance) {
+				nearestDistance = distance;
+				nearestObject = obj;
+			}
 		}
 	}
 	if (!nearestObject) {
 		return 0;
 	}
-	//t = 1.2 - abs(t - 9);
-	return nearestDistance; // nearestObject->getColor();
+	return nearestDistance;
 }
 
-
-//t = 1.2 - abs(t - 9);
-//Color color = Color(t, 0, 0);
-//cout << "\n" << t << endl;
-
 /*
-// Calculate the dot product between the normal and light direction
-float dotProduct = max(0.0f, dot(normal, lightDirection));
 
-// Calculate the diffuse color
-glm::vec3 diffuseColor = lightColor * surfaceColor * dotProduct;
+Color ComputeLocalIllumination(Vector3d intersectionPoint, Vector3d normal) {
 
+	Object3d* nearestObject = NULL;
+
+	Color color = Color(1, 0, 0); // = kd
+
+	for (Light* l : light) {
+	//for (const auto& light : scene.lights) {
+		Vector3d L = light->GetVectorToLightAtPoint(intersectionPoint); // vecteur L_i
+		double dotNL = normal.dot(L); // produit scalaire N·L_i
+
+		if (dotNL > 0) { // Si la source éclaire le pt intersection
+			color += color * dotNL;
+		}
+	}
+
+	return color;
+}
 */
-
