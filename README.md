@@ -11,39 +11,34 @@ des rayons de lumière à partir d'une source lumineuse jusqu'à leur impact sur
 ```mermaid
 classDiagram
     class Ray {
+        - origin : Point3d
+        - direction : Vector3d
     }
     class Vector3d {
+        - x : double
+        - y : double
+        - z : double
     }
     class BMPHelper {
     }
     class Color {
+        - r : double
+        - g : double
+        - b : double
     }
     
     class Scene {
-        + draw()
     }
     class Object3d {
-        - radius : int
-        + getRadius()
-        + setRadius()
-        + draw()
     }
     class Sphere {
-        - width : int
-        - height : int
-        + getWidth()
-        + setWidth()
-        + getHeight()
-        + setHeight()
-        + draw()
+        - center : Vector3d
+        - radius : double
     }
     class Light {
-        - side : int
-        + getSide()
     }
     class DirectionalLight {
-        - side : int
-        + getSide()
+        - direction : Vector3d
     }
     Scene <-- Object3d
     Object3d <|-- Sphere
@@ -52,5 +47,7 @@ classDiagram
 
 ```
 
-## Résultat
-![Result](test.bmp)
+## Résultat final
+![Result](move_spheres.gif)
+
+
