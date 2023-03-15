@@ -50,16 +50,10 @@ void Scene::render(std::string fileName, unsigned int width, unsigned int height
 			ray.setDirection((target - ray.getOrigin()).unit());
 
 			Color color = raytrace(ray);
-
-			float add = raytrace_2(ray)*500;
+			float add = raytrace_2(ray);
 			color.r -= add;
 			color.g -= add;
 			color.b -= add;
-
-			/*
-			if (raytrace_2(ray) != 0) {
-				cout << "\n" << raytrace_2(ray)* 1000 << endl;
-			}*/
 
 			pColors[index++] = MIN(int(255 * color.b), 255);
 			pColors[index++] = MIN(int(255 * color.g), 255);
@@ -110,9 +104,7 @@ double Scene::raytrace_2(const Ray& ray)
 }
 
 /*
-
 Color ComputeLocalIllumination(Vector3d intersectionPoint, Vector3d normal) {
-
 	Object3d* nearestObject = NULL;
 
 	Color color = Color(1, 0, 0); // = kd
@@ -126,7 +118,43 @@ Color ComputeLocalIllumination(Vector3d intersectionPoint, Vector3d normal) {
 			color += color * dotNL;
 		}
 	}
-
 	return color;
 }
 */
+
+
+// ------------ Anti-aliasing ------------
+// J'ai tenté la partie mais ca ne marche pas encore
+
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+
+//générer un nb aléatoire entre 0 et 1
+float Scene::randFloat()
+{
+	return (float)rand() / RAND_MAX;
+}
+
+// générer vecteur aléatoire dans la sphère unité
+Vector3d Scene::random_in_unit_sphere() {
+	Vector3d p;
+	do {
+		p = 2.0 * Vector3d(randFloat(), randFloat(), randFloat()) - Vector3d(1, 1, 1);
+	} while (p.getLength() >= 1.0);
+	return p;
+}
+
+// Fonction pour générer une couleur moyenne pour un pixel
+Color Scene::sample_pixel_color(Ray r, int x, int y, int num_samples)
+{
+	Color color(0, 0, 0);
+	for (int s = 0; s < num_samples; ++s) {
+		float u = float(x + randFloat()) / 1024.0f;
+		float v = float(y + randFloat()) / 1024.0f;
+
+		Color color_r = raytrace(r);
+		color += color_r;
+	}
+	return color;
+}

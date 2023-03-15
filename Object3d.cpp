@@ -18,9 +18,3 @@ const Color& Object3d::getColor()
     return color;
 }
 
-
-/*
-float Object3d::getRadius() {
-    return size_; // / 2.0f;
-}
-*/

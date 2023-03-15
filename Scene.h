@@ -27,6 +27,13 @@ protected:
 	double raytrace_2(const Ray& ray);
 	Color rayLightTrace(const Ray& ray);
 
+	// test Anti-aliasing
+	float randFloat();
+	Vector3d random_in_unit_sphere();
+	Color sample_pixel_color(Ray r, int x, int y, int num_samples);
+
+
+
 	std::vector<Object3d*> objects3d;
 	std::vector<Light*> lights;
 };

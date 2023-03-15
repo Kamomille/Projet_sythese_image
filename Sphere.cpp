@@ -29,7 +29,7 @@ Vector3d Sphere::GetNormalAtPoint(const Vector3d hit_point) {
 
 double Sphere::intersect_sphere(const Ray& ray, Vector3d light)
 {
-    float Light_intensity = 0.2;
+    float Light_intensity = 100;
 
     float intensity = 0;
 
